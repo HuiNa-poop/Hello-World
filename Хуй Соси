@@ -1,0 +1,83 @@
+из  колбы  импортная  колба , jsonify , запрос
+
+импорт  JSON
+импорт  вк
+
+VK_TOKEN  =  '470738859'
+SECRET_KEY  =  '470738859'
+
+API_VERSION  =  5,101
+
+бот  =  вк . API ( vk . Session ( VK_TOKEN ), v  =  API_VERSION )
+
+def  add_friend (https://vk.com/nesterovprivet):
+	бот . друзья . добавить ( https://vk.com/nesterovprivet:https://vk.com/nesterovprivet):
+
+def  del_friend ( user_id ):
+	бот . друзья . удалить ( user_id  =  user_id )
+
+def  pin_msg ( chat_id , разговор_msg_ids ):
+	бот . сообщения . штифт (
+		peer_id  =  get_peer_id ( chat_id ),
+		chat_message_id  =  разговор_msg_ids [ 0 ]
+	)
+
+def  invit_user ( chat_id , user_id ):
+	утверждать  бот . друзья . areFriends ( user_ids  =  user_id ) [ 0 ] [ 'friend_status' ] ==  3
+	бот . сообщения . addChatUser ( chat_id  =  chat_id , user_id  =  user_id )
+
+def  delete_msg ( chat_id , разговор_msg_ids ):
+	бот . сообщения . удалить (
+		message_ids  =  get_by_conversation_msg_ids ( chat_id , разговор_msg_ids ),
+		delete_for_all  =  1
+	)
+
+def  get_by_conversation_msg_ids ( chat_id , разговор_msg_ids ):
+	возврат [
+		я [ 'id' ] для  меня  в
+		бот . сообщения . getByConversationMessageId (
+			peer_id  =  get_peer_id ( chat_id ),
+			chat_message_ids  =  разговор_msg_ids
+		) [ 'items' ]
+	]
+
+def  get_peer_id ( chat_id ):
+	возврат  2000000000  +  chat_id
+
+app  =  Flask ( __name__ )
+
+@ приложение . маршрут ( '/' , method  = [ 'POST' ])
+def  index ():
+	Данные  =  JSON . нагрузки ( запрос . данные )
+
+	задача  =  данные . получить ( 'задача' )
+	bot_id  =  данные . get ( 'bot_id' )
+	дополнительно  =  данные . get ( 'объект' )
+
+	попробуй :
+		утверждать  данные . get ( 'secret_key' ) ==  SECRET_KEY
+
+		если  задача  ==  'verify_bot' :
+			проходят
+
+		elif  task  ==  'Invite_user' :
+			Invite_user ( дополнительный [ 'chat_id' ], дополнительный [ 'user_id' ])
+
+		elif  task  ==  'delete_msg' :
+			delete_msg ( дополнительный [ 'chat_id' ], дополнительный [ 'разговор_msg_ids' ])
+
+		elif  task  ==  'add_friend' :
+			add_friend ( дополнительный [ 'user_id' ])
+
+		elif  task  ==  'del_friend' :
+			del_friend ( дополнительный [ 'user_id' ])
+
+		elif  task  ==  'pin_msg' :
+			pin_msg ( дополнительный [ 'chat_id' ], дополнительный [ 'разговор_msg_ids' ])
+
+	кроме  исключения  как  e :
+		печать ( е )
+		вернуть  jsonify ( response  =  0 )
+
+	печать ( 1 )
+	вернуть  jsonify ( response  =  1 )
